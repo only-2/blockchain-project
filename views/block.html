@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Blockchain | Block</title>
+
+	<link rel="icon" href="/static/img/favicon.ico">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+
+	<script src="/static/js/sha256.js"></script>
+	<script src="/static/js/ajax.js"></script>
+</head>
+
+<body style="margin: 0;">
+	<nav class="navbar navbar-dark bg-primary">
+		<ul>
+			<li><a href="chain">Block Chain</a></li>
+			<li><a class="active" href="blockinfo">Block Info</a></li>
+			<li><a href="hash">Hash</a></li>
+			<li style="float: left;"><a href="/">Blockchain Demo</a></li>
+		</ul>
+	</nav>
+
+
+	<div class="container" id="vuemain" style="margin-top: 100px;">
+		<h1 style="padding: 10px 0;">Block Info</h1>
+
+		<div class="cell">
+			<div class="bg" id="div1">
+				<form>
+					<div class="col">
+						<label>Block:</label>
+						<div style="float: left; width: 90%; display: flex;">
+							<span>#</span><input style="max-width: 877px" id="block" value="1">
+						</div>
+					</div>
+
+					<div class="col">
+						<label style="float: left;">TimeStamp:</label>
+						<div style="float: left; width: 90%;">
+							<input id="TimeStamp" readonly>
+						</div>
+					</div>
+
+					<div class="col">
+						<label style="float: left;">Nonce:</label>
+						<div style="float: left; width: 90%;">
+							<input id="nonce" value="72608">
+						</div>
+					</div>
+
+					<div class="col">
+						<label style="float: left;">Hash:</label>
+						<div style="float: left; width: 90%;">
+							<input id="hash" readonly value="0000f727854b50bb95c054b39c1fe5c92e5ebcfa4bcb5dc279f56aa96a365e5a">
+						</div>
+					</div>
+
+					<div class="col">
+						<label style="float: left;">Data:</label>
+						<div style="float: left; width: 90%;">
+							<textarea id="datacontent"></textarea>
+						</div>
+					</div>
+
+					<div class="col">
+						<label style="float: left;"></label>
+						<div style="float: left; width: 90%;">
+							<input class="btn" type="button" id="btn1" value="Mine">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		window.onload = function () {
+			var date = new Date();
+			var seperator1 = "-";
+			var seperator2 = ":";
+			var month = date.getMonth() + 1;
+			var strDate = date.getDate();
+			var hour = date.getHours();
+			var min = date.getMinutes()
+			var sec = date.getSeconds()
+			if (month >= 1 && month <= 9) {
+				month = "0" + month;
+			}
+			if (strDate >= 0 && strDate <= 9) {
+				strDate = "0" + strDate;
+			}
+			if (hour >= 0 && hour <= 9) {
+				hour = "0" + hour;
+			}
+			if (min >= 0 && min <= 9) {
+				min = "0" + min;
+			}
+			if (sec >= 0 && sec <= 9) {
+				sec = "0" + sec;
+			}
+			var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+				+ " " + hour + seperator2 + min
+				+ seperator2 + sec;
+			document.getElementById("TimeStamp").value = currentdate;
+		}
+		function calhash() {
+			var bl = document.getElementById("block").value
+			var no = document.getElementById("nonce").value
+			var ts = document.getElementById("TimeStamp").value
+			var da = document.getElementById("datacontent").value
+			document.getElementById("hash").value = sha256_digest(bl + no + ts + da)
+			document.getElementById("div1").style.backgroundColor = "rgb(250,220,220)"
+		}
+		document.getElementById("block").addEventListener("input", function () {
+			calhash()
+		})
+		document.getElementById("nonce").addEventListener("input", function () {
+			calhash()
+		})
+		document.getElementById("datacontent").addEventListener("input", function () {
+			calhash()
+		})
+		document.getElementById("btn1").onclick = function () {
+			var bl = document.getElementById("block").value
+			var ts = document.getElementById("TimeStamp").value
+			var da = document.getElementById("datacontent").value
+			var obj = {
+				Bl: bl,
+				Ts: ts,
+				Da: da
+			}
+			ajaxpost("/blockinfo", obj, function (jsonvalue) {
+				var data = eval('(' + jsonvalue + ')');
+				document.getElementById("nonce").value = data.nonce
+				document.getElementById("hash").value = data.datas
+				document.getElementById("div1").style.backgroundColor = "rgb(223,240,216)"
+			})
+		}
+	</script>
+
+	<style type="text/css">
+		html {
+			font-family: 'Noto Sans', Roboto, sans-serif;
+			background-color: #0a0a0a;
+			color: #f0f0f0;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		a {
+			text-decoration: none;
+			color: #f0f0f0;
+			background-color: transparent;
+		}
+
+		nav {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			padding: 10px 0px;
+			overflow: hidden;
+			border: 0;
+			border-radius: 3 px;
+			padding: 0.625 rem 0;
+			margin-bottom: 20 px;
+			background-color: rgba(14, 15, 19, 0.6) !important;
+			border-bottom: 1px solid #FF5151;
+			-webkit-backdrop-filter: blur(8px);
+			backdrop-filter: blur(8 px);
+			box-shadow: 0 4px 18px 0px rgb(0 0 0 / 12%), 0 7px 10px -5px rgb(0 0 0 / 15%);
+		}
+
+		ul {
+			width: 80%;
+			max-width: 1100px;
+			margin: auto;
+			list-style-type: none;
+			padding: 0;
+		}
+
+		li {
+			float: right;
+		}
+
+		li a {
+			display: block;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		}
+
+		li a:hover:not(.active) {
+			color: #FF5151;
+		}
+
+		.active {
+			color: #FF5151;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: auto;
+		}
+
+		.bg {
+			width: 90%;
+			padding: 20px;
+			border-radius: 5px;
+			background: #CDF2CA;
+			border: 1px solid #e3e3e3;
+			height: max-content;
+		}
+
+		.col {
+			overflow: hidden;
+			display: flex;
+			padding: 10px 0;
+		}
+
+		.col label {
+			float: left;
+			width: 120px;
+			height: 30px;
+			color: black;
+			line-height: 30px;
+			font-weight: bolder;
+		}
+
+		form div span {
+			padding: 9px 12px;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 1;
+			color: #555;
+			text-align: center;
+			background-color: #eee;
+			border: 1px solid #ccc;
+			border-top-left-radius: 4px;
+			border-bottom-left-radius: 4px
+		}
+
+		form div input {
+			width: 100%;
+			height: 30px;
+			border: 1px solid #ccc;
+			border-top-right-radius: 4px;
+			border-bottom-right-radius: 4px
+		}
+
+		form div textarea {
+			width: 100%;
+			height: 215px;
+			border: 1px solid #ccc;
+			border-top-right-radius: 4px;
+			border-bottom-right-radius: 4px;
+			overflow: hidden;
+		}
+
+		.btn {
+			width: 57px;
+			height: 34px;
+			color: white;
+			background-image: linear-gradient(to bottom, #337ab7 0, #265a88 100%);
+			border-radius: 4px;
+		}
+
+		.cell {
+			float: left;
+			float: left;
+			width: 100%;
+			margin: auto;
+		}
+	</style>
+
+</body>
+
+</html>

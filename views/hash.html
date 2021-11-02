@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Blockchain | Hash</title>
+
+	<link rel="icon" href="/static/img/favicon.ico">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+
+	<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+	<script src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="/static/js/sha256.js"></script>
+	<script src="/static/js/vue.js"></script>
+</head>
+
+<body style="margin: 0;">
+	<nav class="navbar navbar-dark bg-primary">
+		<ul>
+			<li><a href="chain">Block Chain</a></li>
+			<li><a href="blockinfo">Block Info</a></li>
+			<li><a class="active" href="hash">Hash</a></li>
+			<li style="float: left;"><a href="/">Blockchain Project Demo</a></li>
+		</ul>
+	</nav>
+
+	<div class="container" id="vuemain" style="margin-top: 100px;">
+		<h1 style="padding: 10px 0;">SHA256 Hash</h1>
+		<div class="cell">
+			<div class="bg">
+				<form>
+					<div class="col">
+						<label style="float: left;">Data:</label>
+						<div style="float: left; width: 90%;">
+							<textarea v-model="datacontent">
+							</textarea>
+						</div>
+					</div>
+
+					<div class="col">
+						<label style="float: left;">Hash:</label>
+						<div style="float: left; width: 90%;">
+							<input type="" readonly v-model="hash">
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		var watchExampleVM = new Vue({
+			el: '#vuemain',
+			data: {
+				datacontent: "",
+				hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+			},
+			created: function () {
+
+			},
+			watch: {
+				datacontent: function () {
+					$('.bg').css("background-color", "#D1E8E4");
+				},
+				datacontent: function () {
+					this.hashdata();
+				}
+			},
+			methods: {
+				hashdata: function () {
+					this.hash = sha256_digest(this.datacontent)
+				}
+			}
+		})
+	</script>
+
+	<style type="text/css">
+		html {
+			font-family: 'Noto Sans', Roboto, sans-serif;
+			background-color: #0a0a0a;
+			color: #f0f0f0;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		a {
+			text-decoration: none;
+			color: #f0f0f0;
+			background-color: transparent;
+		}
+
+		nav {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			padding: 10px 0px;
+			overflow: hidden;
+			border: 0;
+			border-radius: 3 px;
+			padding: 0.625 rem 0;
+			margin-bottom: 20 px;
+			background-color: rgba(14, 15, 19, 0.6) !important;
+			border-bottom: 1px solid #FF5151;
+			-webkit-backdrop-filter: blur(8px);
+			backdrop-filter: blur(8 px);
+			box-shadow: 0 4px 18px 0px rgb(0 0 0 / 12%), 0 7px 10px -5px rgb(0 0 0 / 15%);
+		}
+
+		ul {
+			width: 80%;
+			max-width: 1100px;
+			margin: auto;
+			list-style-type: none;
+			padding: 0;
+		}
+
+		li {
+			float: right;
+		}
+
+		li a {
+			display: block;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		}
+
+		li a:hover:not(.active) {
+			color: #FF5151;
+		}
+
+		.active {
+			color: #FF5151;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: auto;
+		}
+
+		.bg {
+			width: 90%;
+			padding: 20px;
+			border-radius: 5px;
+			background: #CDF2CA;
+			border: 1px solid #e3e3e3;
+			height: max-content;
+		}
+
+		.col {
+			overflow: hidden;
+			padding: 10px 0;
+		}
+
+		.col label {
+			float: left;
+			width: 60px;
+			color: black;
+			height: 30px;
+			line-height: 30px;
+			font-weight: bolder;
+		}
+
+		form div input {
+			width: 100%;
+			height: 30px;
+			padding: 0 8px;
+			border: 1px solid #ccc;
+			border-top-right-radius: 4px;
+			border-bottom-right-radius: 4px
+		}
+
+		form div textarea {
+			width: 100%;
+			height: 215px;
+			padding: 5px;
+			border: 1px solid #ccc;
+			border-top-right-radius: 4px;
+			border-bottom-right-radius: 4px;
+			overflow: hidden;
+		}
+
+		.cell {
+			float: left;
+			width: 100%;
+			margin: auto;
+		}
+	</style>
+</body>
+
+</html>
